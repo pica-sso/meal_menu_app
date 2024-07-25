@@ -73,12 +73,14 @@ class LUNCH:
             print()
 
     def print_day_menu(self, week_day):
-        print(f'*** {week_day} 요 일 ***')
+        text = f'*** {week_day} 요 일 ***\n'
         for cat in self.menu_dict[week_day].keys():
-            print(f'<{cat}>')
+            text += f'<{cat}>\n'
             for me in self.menu_dict[week_day][cat]:
-                print(me)
-            print()
+                text += me + '\n'
+            text += '\n'
+        print(text)
+        return text
 
     def get_input(self):
         while (True):
@@ -87,10 +89,10 @@ class LUNCH:
                 break
             elif param.upper() in lu.day_list_en:
                 idx = lu.day_list_en.index(param.upper())
-                lu.print_day_menu(lu.day_list[idx])
+                text = lu.print_day_menu(lu.day_list[idx])
             elif param in lu.day_list:
                 idx = lu.day_list.index(param)
-                lu.print_day_menu(lu.day_list[idx])
+                text = lu.print_day_menu(lu.day_list[idx])
             elif param == 'thisweek':
                 lu.print_week_menu()
             elif param == 'tomorrow':
@@ -98,13 +100,13 @@ class LUNCH:
                 if tom_idx >= 7:
                     print("[PAGE ERROR] No menu for next week. :(")
                 else:
-                    lu.print_day_menu(lu.day_list[tom_idx])
+                    text = lu.print_day_menu(lu.day_list[tom_idx])
             elif param == 'yesterday':
                 yes_idx = lu.day_list.index(lu.week_day) - 1
                 if yes_idx == 0:
                     print("Yesterday was SUNDAY.")
                 else:
-                    lu.print_day_menu(lu.day_list[yes_idx])
+                    text = lu.print_day_menu(lu.day_list[yes_idx])
             elif param == 'help':
                 print('Enter what you want to know.')
                 print("EX) 'thisweek', 'tomorrow', 'yesterday', 'MON', 'TUE'...")
@@ -121,7 +123,7 @@ if __name__ == '__main__':
         print("☺ : Let's go out!!!")
     else:
         lu.find_menu(lunch_menu=menu)
-        lu.print_day_menu(lu.week_day)
+        text = lu.print_day_menu(lu.week_day)
 
     # lu.get_input()
     os.system("pause")
