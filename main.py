@@ -36,11 +36,15 @@ class LUNCH:
         res.raise_for_status()  # 정상 200
         if res.status_code != 200:
             print("[CONNECTION ERROR] Cannot connect menu site.")
-        soup = BeautifulSoup(res.text, "lxml")
-        lunch_menu = soup.find_all('tr', attrs={"class": f"tr-row-1"})
-        err_page = soup.find('title').text
-        if err_page == 'error page':
-            print("[PAGE ERROR] No menu for this week. :(")
+        try:
+            # soup = BeautifulSoup(res.text, "lxml")
+            soup = BeautifulSoup(res.text, "html.parser")
+            lunch_menu = soup.find_all('tr', attrs={"class": f"tr-row-1"})
+            err_page = soup.find('title').text
+            if err_page == 'error page':
+                print("[PAGE ERROR] No menu for this week. :(")
+        except Exception as e:
+            print(e)
         return lunch_menu
 
     def find_menu(self, lunch_menu):
@@ -126,6 +130,6 @@ if __name__ == '__main__':
         text = lu.print_day_menu(lu.week_day)
 
     # lu.get_input()
-    os.system("pause")
+    # os.system("pause")
 
 
