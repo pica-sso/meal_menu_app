@@ -1,10 +1,6 @@
-import os
-import sys
 import datetime
 import requests
 from bs4 import BeautifulSoup
-
-from PySide6.QtWidgets import *
 
 APP_ICON = r'C:\source\seyeong_draft\menu_amkor\lunch-time.png'
 
@@ -12,40 +8,56 @@ class LUNCH:
     def __init__(self):
         self.day_list = ['월', '화', '수', '목', '금', '토', '일']
         self.day_list_en = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
-        self.menu_dict = {'월': {'한식': [], '일품식': []},
-                          '화': {'한식': [], '일품식': []},
-                          '수': {'한식': [], '일품식': []},
-                          '목': {'한식': [], '일품식': []},
-                          '금': {'한식': [], '일품식': []},
-                          '토': {'한식': [], '일품식': []},
-                          '일': {'한식': [], '일품식': []},
-                          }
+        self.menu_dict = {day: {'한식': [], '일품식': []} for day in self.day_list}
         self.week_day = ''
+        self.dates_days = []
 
     def find_ww(self, add_week=0):
         today = datetime.datetime.today()
         print(today)
         self.week_day = self.day_list[today.weekday()]
         week_num = today.isocalendar()[1]
-        site_url = f"https://intranet.amkor.co.kr/app/service/carte/view/detail?plant=S&year=2024&week={week_num+add_week}"
+        site_url = f"https://intranet.amkor.co.kr/app/service/carte/view/detail?plant=S&year={today.year}&week={week_num+add_week}"
         return site_url
 
-    @staticmethod
-    def open_site(url):
+    # @staticmethod
+    def open_site(self, url):
         res = requests.get(url)
         res.raise_for_status()  # 정상 200
         if res.status_code != 200:
             print("[CONNECTION ERROR] Cannot connect menu site.")
+            return []
         try:
-            # soup = BeautifulSoup(res.text, "lxml")
             soup = BeautifulSoup(res.text, "html.parser")
+            menu_table = soup.find('table')
+            header_row = menu_table.find('tr')
+            headers = header_row.find_all('td')
+            self.dates_days = [header.text.strip() for header in headers[1:]]  # 첫 번째 헤더는 제외
             lunch_menu = soup.find_all('tr', attrs={"class": f"tr-row-1"})
             err_page = soup.find('title').text
             if err_page == 'error page':
                 print("[PAGE ERROR] No menu for this week. :(")
         except Exception as e:
             print(e)
+            return []
         return lunch_menu
+
+    def make_menu_dict(self, menu_rows):
+        menu_data = {'한식': [], '일품식': [], '간편식': []}
+        categories = ['한식', '일품식', '간편식']
+        for i, row in enumerate(menu_rows):
+            if i >= len(categories):
+                break  # Avoid IndexError
+            columns = row.find_all('td')
+            for j in range(1, min(len(columns), len(self.dates_days) + 1)):
+                date_day = self.dates_days[j - 1]
+                menu_items = columns[j].decode_contents().split('<br/>')
+                category = categories[i]
+                menu_data[category].append({
+                    'date_day': date_day,
+                    'menu': [item.strip() for item in menu_items if item.strip()]
+                })
+        return menu_data
 
     def find_menu(self, lunch_menu):
         category = ''
@@ -64,6 +76,16 @@ class LUNCH:
                     self.menu_dict[self.day_list[day]][category].append(menu)
                 day += 1
 
+    def print_day_menu(self, week_day):
+        text = f'*** {week_day} 요 일 ***\n'
+        for cat in self.menu_dict[week_day].keys():
+            text += f'<{cat}>\n'
+            for me in self.menu_dict[week_day][cat]:
+                text += me + '\n'
+            text += '\n'
+        print(text)
+        return text
+
     def print_week_menu(self):
         for day in self.menu_dict.keys():
             if day == '토':
@@ -75,16 +97,6 @@ class LUNCH:
                     print(me)
                 print()
             print()
-
-    def print_day_menu(self, week_day):
-        text = f'*** {week_day} 요 일 ***\n'
-        for cat in self.menu_dict[week_day].keys():
-            text += f'<{cat}>\n'
-            for me in self.menu_dict[week_day][cat]:
-                text += me + '\n'
-            text += '\n'
-        print(text)
-        return text
 
     def get_input(self):
         while (True):
@@ -123,6 +135,8 @@ if __name__ == '__main__':
     lu = LUNCH()
     site_url = lu.find_ww(0)
     menu = lu.open_site(url=site_url)
+    menu_data = lu.make_menu_dict(menu)
+
     if menu == []:
         print("☺ : Let's go out!!!")
     else:
