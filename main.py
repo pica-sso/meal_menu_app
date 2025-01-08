@@ -1,3 +1,4 @@
+import os
 import datetime
 import requests
 from bs4 import BeautifulSoup
@@ -144,6 +145,6 @@ if __name__ == '__main__':
         text = lu.print_day_menu(lu.week_day)
 
     # lu.get_input()
-    # os.system("pause")
+    os.system("pause")
 
 
