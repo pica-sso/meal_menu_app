@@ -9,7 +9,7 @@ class LUNCH:
     def __init__(self):
         self.day_list = ['월', '화', '수', '목', '금', '토', '일']
         self.day_list_en = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
-        self.menu_dict = {day: {'한식': [], '일품식': []} for day in self.day_list}
+        self.menu_dict = {day: {'한식': [], '일품식': [], '간편식': []} for day in self.day_list}
         self.week_day = ''
         self.dates_days = []
 
@@ -66,10 +66,10 @@ class LUNCH:
             day = 0
             menu_items = menu.find_all('td')
             for detail in menu_items:
-                if detail.text == '간편식' or detail.text == 'PLUS':
+                if detail.text == 'PLUS':   # if detail.text == '간편식' or detail.text == 'PLUS':
                     break
                 elif detail.text == '중식': continue
-                elif detail.text == '한식' or detail.text == '일품식':
+                elif detail.text == '한식' or detail.text == '일품식' or detail.text == '간편식':
                     category = detail.text
                     continue
                 for idx, menu in enumerate(detail.contents):
