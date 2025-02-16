@@ -40,7 +40,15 @@ class LunchScraper:
         return lunch_menu
 
     def make_menu_dict(self, menu_rows):
+        print(f"[DEBUG] Received menu_rows: {menu_rows}")  # 디버깅용
+
+        if not menu_rows:
+            print("[DEBUG] No menu_rows received!")
+            return {}
+
         menu_data = {day: {'한식': [], '일품식': [], '간편식': []} for day in self.dates_days}
+        print(f"[DEBUG] Initialized menu_data: {menu_data}")
+
         categories = ['한식', '일품식', '간편식']
 
         for i, row in enumerate(menu_rows):
@@ -48,22 +56,32 @@ class LunchScraper:
                 break
             columns = row.find_all('td')
 
-            for j in range(1, min(len(columns), len(self.dates_days) + 1)):
+            print(f"[DEBUG] Row {i} columns: {[col.text.strip() for col in columns]}")
+
+            for j in range(1, len(columns)):  # 날짜 개수와 맞춰서 루프
+                if j - 1 >= len(self.dates_days):
+                    break  # 방어 코드
+
                 date_day = self.dates_days[j - 1]
                 menu_items = columns[j].decode_contents().split('<br/>')
                 category = categories[i]
 
                 menu_data[date_day][category] = [item.strip() for item in menu_items if item.strip()]
+                print(f"[DEBUG] Added menu items for {date_day} - {category}: {menu_data[date_day][category]}")
 
+        print(f"[DEBUG] Final menu_data: {menu_data}")
         return menu_data
 
     def get_week_menu(self, add_week=0):
         url = self.find_ww(add_week)
         menu_rows = self.open_site(url)
+
         if not menu_rows:
+            print("[DEBUG] No menu rows found.")
             return {"error": "No menu available for this week."}
 
         menu_data = self.make_menu_dict(menu_rows)
+        print(f"[DEBUG] Menu data created: {menu_data}")
         return menu_data
 
     def get_day_menu(self, day):
