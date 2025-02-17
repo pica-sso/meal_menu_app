@@ -6,6 +6,16 @@
 
 ---
 
+## 🖥 개발 환경
+- 운영 체제: **Windows**
+- 프로그래밍 언어: **Python 3.11**
+- 프레임워크 및 라이브러리:
+  - **FastAPI** (백엔드 API 서버)
+  - **BeautifulSoup** (웹 크롤링)
+  - **React / React Native** (프론트엔드 예정)
+  - **SQLite / PostgreSQL** (데이터베이스 예정)
+
+---
 ## 🏗 개발 진행 과정
 
 ### 1️⃣ FastAPI를 활용한 백엔드 개발 (완료 ✅)
@@ -28,7 +38,25 @@
 - React Native를 활용하여 모바일 앱 개발
 - API 데이터를 활용하여 식단 정보를 앱에서 확인 가능하도록 구현
 ### 5️⃣ 서버 배포 (예정)
-- FastAPI 서버를 **클라우드(AWS, Render 등)**에 배포하여 어디서든 접근 가능하도록 설정
+- FastAPI 서버를 **클라우드(AWS, Render 등)** 에 배포하여 어디서든 접근 가능하도록 설정
+---
+
+
+## 🖥 서버 실행 방법
+### Windows 환경
+1. **Python 가상환경 설정 (처음 한 번만 실행)**
+    ```sh
+    python -m venv venv
+    venv\Scripts\activate
+    pip install -r server/requirements.txt
+    ```
+2. **서버 실행**
+    - `server_start.bat` 실행 → 자동으로 서버가 실행됨
+    - 또는 수동 실행:
+    ```sh
+    cd server
+    uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    ```
 ---
 ## 📂 프로젝트 폴더 구조
 ```commandline
@@ -41,7 +69,7 @@
 │   ├── 📜 requirements.txt   # 필요한 Python 패키지 목록
 │   ├── 📂 tests              # 테스트 코드 모음
 │   ├── 📂 static             # 정적 파일 (이미지 등)
-│   └── 📜 README.md          # 백엔드 설명 문서
+│   └── 📜 SERVER_README.md   # 백엔드 설명 문서
 │
 ├── 📂 web                    # React 기반 웹 프론트엔드
 │   ├── 📜 package.json       # npm 패키지 정보
@@ -64,7 +92,11 @@
 │   ├── 📜 startup.sh         # 서버 실행 스크립트
 │   └── 📜 README.md          # 배포 설명 문서
 │
-├── 📜 .gitignore             # Git에서 제외할 파일 목록
+├── 📂 icons                  # 프로젝트 아이콘 및 로고
+│   ├── 📜 lunch.ico          # 앱 아이콘
+│
+├── 📜 server_start.bat       # window에서 server 시작 배치 파일
+├── 📜 .env                   # 환경변수 설정 파일
 ├── 📜 README.md              # 프로젝트 설명 문서
 └── 📜 LICENSE                # 라이선스 정보
 ```
