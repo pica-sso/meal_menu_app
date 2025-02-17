@@ -60,7 +60,7 @@
 ---
 ## 📂 프로젝트 폴더 구조
 ```commandline
-📦 menu_amkor
+📦 meal_menu_app
 ├── 📂 server                 # FastAPI 기반 서버
 │   ├── 📜 main.py            # FastAPI 서버 실행 코드
 │   ├── 📜 menu_scraper.py    # 웹 크롤러 (BeautifulSoup 사용)
