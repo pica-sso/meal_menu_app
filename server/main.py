@@ -1,14 +1,13 @@
 from fastapi import FastAPI
 from menu_scraper import LunchScraper
-
-print("[DEBUG] FastAPI 앱 시작")  # 앱 시작 시 출력되는지 확인
+import uvicorn
 
 app = FastAPI()
 scraper = LunchScraper()
 
 @app.get("/")
 def read_root():
-    print("[DEBUG] / 요청 받음")  # 루트 경로 요청 확인
+    print("[DEBUG] / 요청 받음")
     return {"message": "Welcome to the Lunch Menu API!"}
 
 @app.get("/menu/week")
@@ -18,9 +17,9 @@ def get_week_menu():
     site_url = scraper.find_ww(0)
     print(f"[DEBUG] Fetching weekly menu from: {site_url}")
     menu = scraper.open_site(site_url)
-    scraper.find_menu(menu)
-    print(f"[DEBUG] Weekly menu fetched: {scraper.menu_dict}")
-    return scraper.menu_dict
+    week_menu = scraper.make_menu_dict(menu)
+    print(f"[DEBUG] Weekly menu fetched: {week_menu}")
+    return week_menu
 
 @app.get("/menu/day/{day}")
 def get_day_menu(day: str):
@@ -48,3 +47,8 @@ def get_day_menu(day: str):
     else:
         print(f"[DEBUG] Invalid day requested: {day}")
         return {"error": "Invalid day. Use '월' ~ '금' or 'MON' ~ 'FRI'."}
+
+
+if __name__ == "__main__":
+    print("[DEBUG] FastAPI 서버 실행")
+    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)

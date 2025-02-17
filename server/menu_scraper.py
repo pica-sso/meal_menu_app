@@ -29,7 +29,7 @@ class LunchScraper:
             menu_table = soup.find('table')
             header_row = menu_table.find('tr')
             headers = header_row.find_all('td')
-            self.dates_days = [header.text.strip() for header in headers[1:]]
+            self.dates_days = [header.text[0] for header in headers[1:]]
             lunch_menu = soup.find_all('tr', attrs={"class": f"tr-row-1"})
             err_page = soup.find('title').text
             if err_page == 'error page':
@@ -57,19 +57,22 @@ class LunchScraper:
             columns = row.find_all('td')
 
             print(f"[DEBUG] Row {i} columns: {[col.text.strip() for col in columns]}")
+            remove_list = ["조식", "중식", "석식", "야식"]
+            columns = [col for col in columns if col.text.strip() not in remove_list]
 
             for j in range(1, len(columns)):  # 날짜 개수와 맞춰서 루프
                 if j - 1 >= len(self.dates_days):
                     break  # 방어 코드
 
-                date_day = self.dates_days[j - 1]
-                menu_items = columns[j].decode_contents().split('<br/>')
+                date_day = self.dates_days[j - 1]  # j-1을 사용해 맞춰줌
                 category = categories[i]
+                menu_items = columns[j].decode_contents().split('<br/>')
 
                 menu_data[date_day][category] = [item.strip() for item in menu_items if item.strip()]
                 print(f"[DEBUG] Added menu items for {date_day} - {category}: {menu_data[date_day][category]}")
 
         print(f"[DEBUG] Final menu_data: {menu_data}")
+        self.menu_dict = menu_data
         return menu_data
 
     def get_week_menu(self, add_week=0):
