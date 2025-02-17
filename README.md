@@ -13,38 +13,69 @@
 - `BeautifulSoup`을 활용한 **웹 크롤링 기능** 구현
 - **로컬 서버**에서 테스트 완료
 
-### 2️⃣ API 엔드포인트 (현재 상태)
+### 2️⃣ API 엔드포인트 (진행 중)
 | 엔드포인트 | 설명 |
 |-----------|------|
 | `GET /` | API 상태 확인 |
 | `GET /menu/week` | 이번 주 전체 메뉴 조회 |
 | `GET /menu/day/{day}` | 특정 요일(월~금)의 메뉴 조회 |
+---
+## 🔥 다음 단계
+### 3️⃣ 웹 프론트엔드 개발 (예정)
+- React 또는 Next.js를 활용하여 웹페이지에서 메뉴 조회 기능 추가
+- API 데이터를 가져와 화면에 표시
+### 4️⃣ 모바일 앱 개발 (예정)
+- React Native를 활용하여 모바일 앱 개발
+- API 데이터를 활용하여 식단 정보를 앱에서 확인 가능하도록 구현
+### 5️⃣ 서버 배포 (예정)
+- FastAPI 서버를 **클라우드(AWS, Render 등)**에 배포하여 어디서든 접근 가능하도록 설정
+---
+## 📂 프로젝트 폴더 구조
+```commandline
+📦 menu_amkor
+├── 📂 server                 # FastAPI 기반 서버
+│   ├── 📜 main.py            # FastAPI 서버 실행 코드
+│   ├── 📜 menu_scraper.py    # 웹 크롤러 (BeautifulSoup 사용)
+│   ├── 📜 models.py          # 데이터 모델 (추후 DB 적용 시 사용)
+│   ├── 📜 config.py          # 설정 파일 (추후 환경변수 관리)
+│   ├── 📜 requirements.txt   # 필요한 Python 패키지 목록
+│   ├── 📂 tests              # 테스트 코드 모음
+│   ├── 📂 static             # 정적 파일 (이미지 등)
+│   └── 📜 README.md          # 백엔드 설명 문서
+│
+├── 📂 web                    # React 기반 웹 프론트엔드
+│   ├── 📜 package.json       # npm 패키지 정보
+│   ├── 📜 index.js           # 웹 진입점
+│   ├── 📂 src                # React 컴포넌트 및 페이지
+│   ├── 📂 public             # 정적 파일 (favicon 등)
+│   └── 📜 README.md          # 웹 설명 문서
+│
+├── 📂 app                    # React Native 기반 모바일 앱
+│   ├── 📜 package.json       # npm 패키지 정보
+│   ├── 📜 App.js             # 앱 진입점
+│   ├── 📂 src                # React Native 컴포넌트 및 화면
+│   ├── 📂 assets             # 앱에서 사용하는 이미지 등
+│   └── 📜 README.md          # 모바일 앱 설명 문서
+│
+├── 📂 deploy                 # 배포 관련 파일
+│   ├── 📜 Dockerfile         # 컨테이너화된 배포 설정
+│   ├── 📜 docker-compose.yml # 여러 컨테이너를 구성하는 설정 파일
+│   ├── 📜 nginx.conf         # Nginx 리버스 프록시 설정
+│   ├── 📜 startup.sh         # 서버 실행 스크립트
+│   └── 📜 README.md          # 배포 설명 문서
+│
+├── 📜 .gitignore             # Git에서 제외할 파일 목록
+├── 📜 README.md              # 프로젝트 설명 문서
+└── 📜 LICENSE                # 라이선스 정보
+```
+---
+## 🛠 기술 스택
+- Backend: FastAPI, Python, BeautifulSoup, Uvicorn
+- Frontend (예정): React (Next.js), React Native
+- Database (예정): SQLite or PostgreSQL
+- Deployment (예정): Render, AWS, 또는 Vercel
+---
+## 💡 참고 및 개선할 점
+- 프론트엔드 개발 후 API 최적화 진행 예정
 
-🔹 **예제 요청 및 응답**  
-`GET http://127.0.0.1:8000/menu/day/월`
-```json
-{
-  "day": "월",
-  "menu": {
-    "한식": [
-      "고기산적야채조림",
-      "얼큰김치국",
-      "들기름막국수",
-      "아삭이고추양파무침",
-      "깍두기/밥3종"
-    ],
-    "일품식": [
-      "순살돈가스",
-      "분모자떡볶이",
-      "가쓰오장국",
-      "열무김치/밥3종"
-    ],
-    "간편식": [
-      "메뉴 중 1가지 선택",
-      "1.수제샐러드",
-      "2.떠먹는고구마케이크+견과류+음료1종",
-      "3.치즈불고기버거+음료1종",
-      "4.보틀선식set"
-    ]
-  }
-}
+
