@@ -3,7 +3,8 @@ import datetime
 import requests
 from bs4 import BeautifulSoup
 
-APP_ICON = r'C:\source\seyeong_draft\menu_amkor\lunch-time.png'
+APP_ICON = os.path.join(os.path.dirname(__file__), "icons", 'lunch-time.png')
+
 
 class LUNCH:
     def __init__(self):
@@ -19,6 +20,7 @@ class LUNCH:
         self.week_day = self.day_list[today.weekday()]
         week_num = today.isocalendar()[1]
         site_url = f"https://intranet.amkor.co.kr/app/service/carte/view/detail?plant=S&year={today.year}&week={week_num+add_week}"
+        print(f"[INFO] Site URL : {site_url}")
         return site_url
 
     # @staticmethod

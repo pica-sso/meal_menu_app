@@ -26,12 +26,14 @@ BeautifulSoup을 활용해 웹에서 **식단 데이터를 크롤링**하고, JS
 ```bash
 pip install -r requirements.txt
 ```
+
 ### 2️⃣ 서버 실행
 ```commandline
 uvicorn main:app --reload
 ```
 - 기본적으로 http://127.0.0.1:8000에서 실행됩니다.
 - --reload 옵션을 사용하면 코드 변경 시 자동으로 서버가 다시 시작됩니다.
+
 ### 3️⃣ API 문서 확인
 - FastAPI는 자동으로 API 문서를 생성합니다.
 - 아래 주소에서 API 테스트 및 확인이 가능합니다.
