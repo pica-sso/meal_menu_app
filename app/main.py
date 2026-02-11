@@ -36,7 +36,16 @@ class LUNCH:
             header_row = menu_table.find('tr')
             headers = header_row.find_all('td')
             self.dates_days = [header.text.strip() for header in headers[1:]]  # 첫 번째 헤더는 제외
-            lunch_menu = soup.find_all('tr', attrs={"class": f"tr-row-1"})
+
+            # 오후 2시 이후에는 저녁 메뉴, 그 전에는 점심 메뉴
+            current_hour = datetime.datetime.now().hour
+            if current_hour >= 14:
+                print("[INFO] Loading dinner menu.")
+                lunch_menu = soup.find_all('tr', attrs={"class": f"tr-row-2"})
+            else:
+                print("[INFO] Loading lunch menu.")
+                lunch_menu = soup.find_all('tr', attrs={"class": f"tr-row-1"})
+
             err_page = soup.find('title').text
             if err_page == 'error page':
                 print("[PAGE ERROR] No menu for this week. :(")
@@ -71,6 +80,7 @@ class LUNCH:
                 if detail.text == 'PLUS':   # if detail.text == '간편식' or detail.text == 'PLUS':
                     break
                 elif detail.text == '중식': continue
+                elif detail.text == '석식': continue
                 elif detail.text == '한식' or detail.text == '일품식' or detail.text == '간편식':
                     category = detail.text
                     continue
